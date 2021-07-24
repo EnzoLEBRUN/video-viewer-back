@@ -22,6 +22,9 @@
     "composer/package-versions-deprecated": {
         "version": "1.11.99.2"
     },
+    "dereuromark/media-embed": {
+        "version": "0.5.5"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -110,6 +113,9 @@
     },
     "gedmo/doctrine-extensions": {
         "version": "v3.1.0"
+    },
+    "jbroadway/urlify": {
+        "version": "1.2.2-stable"
     },
     "laminas/laminas-code": {
         "version": "4.4.2"
@@ -426,6 +432,12 @@
     },
     "twig/twig": {
         "version": "v3.3.2"
+    },
+    "voku/portable-ascii": {
+        "version": "1.5.6"
+    },
+    "voku/stop-words": {
+        "version": "2.0.1"
     },
     "webmozart/assert": {
         "version": "1.10.0"

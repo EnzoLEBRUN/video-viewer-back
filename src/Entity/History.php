@@ -6,9 +6,10 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Timestampable;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use MediaEmbed\MediaEmbed;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -17,6 +18,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity
  * @ApiResource(
+ *     attributes={
+ *          "order"={
+ *              "createdAt": "DESC"
+ *          }
+ *     },
  *     itemOperations={
  *          "get"={
  *              "normalization_context"={"groups"={"api_history_get"}}
@@ -117,6 +123,18 @@ class History implements Timestampable
     {
         $this->createdAt = $createdAt;
         return $this;
+    }
+
+    /**
+     * @Groups({
+     *      "api_history_get", "api_history_post", "api_history_list"
+     * })
+     * @SerializedName("video_url")
+     * @return string
+     */
+    public function getVideoURL() {
+        $mediaEmbed = new MediaEmbed();
+        return $mediaEmbed->parseUrl($this->getUrl())->getEmbedSrc();
     }
 
 }

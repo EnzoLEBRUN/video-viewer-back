@@ -6,9 +6,11 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Timestampable;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use ApiPlatform\Core\Annotation\ApiResource;
+use MediaEmbed\MediaEmbed;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,11 +18,22 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @package App\Entity
  *
  * @ORM\Entity
- * @UniqueEntity(fields={"url"})
+ * @UniqueEntity(
+ *     fields={"url"},
+ *     groups={"api_bookmark_post"}
+ * )
  * @ApiResource(
+ *     attributes={
+ *          "order"={
+ *              "createdAt": "DESC"
+ *          }
+ *     },
  *     itemOperations={
  *          "get"={
  *              "normalization_context"={"groups"={"api_bookmark_get"}}
+ *          },
+ *          "delete"={
+ *              "normalization_context"={"groups"={"api_bookmark_delete"}}
  *          }
  *     },
  *     collectionOperations={
@@ -118,6 +131,18 @@ class Bookmark implements Timestampable
     {
         $this->createdAt = $createdAt;
         return $this;
+    }
+
+    /**
+     * @Groups({
+     *      "api_bookmark_get", "api_bookmark_post", "api_bookmark_list"
+     * })
+     * @SerializedName("video_url")
+     * @return string
+     */
+    public function getVideoURL() {
+        $mediaEmbed = new MediaEmbed();
+        return $mediaEmbed->parseUrl($this->getUrl())->getEmbedSrc();
     }
 
 }
